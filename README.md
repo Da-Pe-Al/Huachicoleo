@@ -13,13 +13,13 @@ Este repositorio contiene un flujo completo para entrenar y validar un autoencod
   - `matplotlib`
   - `seaborn`
 
-Instala el entorno recomendado ejecutando:
+Instala el entorno recomendado ejecutando (o usa `requirements.txt` para crear un entorno reproducible):
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 pip install --upgrade pip
-pip install tensorflow numpy pandas scikit-learn matplotlib seaborn
+pip install -r requirements.txt
 ```
 
 ## Archivos principales
@@ -33,9 +33,9 @@ pip install tensorflow numpy pandas scikit-learn matplotlib seaborn
    - Clona el repositorio y activa el entorno virtual con las dependencias listadas.
    - Verifica que el archivo `rebombeo_huachicoleo.csv` esté en la raíz del proyecto.
 
-2. **Abrir el cuaderno**
-   - Ejecuta `jupyter notebook` o `jupyter lab` desde la raíz del proyecto.
-   - Abre `Red_Huachicoleo.ipynb` y ejecuta las celdas en orden.
+2. **Ejecutar el pipeline**
+   - **Opción cuaderno:** ejecuta `jupyter notebook` o `jupyter lab`, abre `Red_Huachicoleo.ipynb` y corre las celdas en orden.
+   - **Opción script reproducible:** ejecuta `python run_pipeline.py --output artefactos/resultados.json` para entrenar el modelo y generar un reporte JSON con las métricas, el umbral calibrado y los errores de reconstrucción del conjunto de prueba.
 
 3. **Comprender el pipeline**
    - **Carga y ordenamiento de datos**: el dataset se ordena cronológicamente para preservar dependencias temporales.
@@ -47,9 +47,9 @@ pip install tensorflow numpy pandas scikit-learn matplotlib seaborn
    - **Evaluación final**: en el conjunto de prueba se reportan métricas completas (`precision`, `recall`, `f1`, `ROC AUC`, `Average Precision`) y se generan visualizaciones de errores y matrices de confusión.
 
 4. **Interpretar resultados**
-   - Revisa la tabla de métricas y la matriz de confusión para entender el desempeño del detector.
+   - Revisa la tabla de métricas y la matriz de confusión (en el cuaderno) o el archivo JSON generado por `run_pipeline.py` para entender el desempeño del detector.
    - Observa las curvas de entrenamiento, densidades de error y trazas temporales para validar la separación entre comportamientos normales y anómalos.
-   - Ajusta los hiperparámetros (tamaño de ventana, percentiles, arquitectura) si necesitas priorizar métricas específicas del negocio.
+   - Ajusta los hiperparámetros (tamaño de ventana, percentiles, arquitectura) si necesitas priorizar métricas específicas del negocio. En el script se pueden parametrizar con flags (`--window`, `--step`, `--epochs`, etc.).
 
 5. **Siguientes pasos sugeridos**
    - Exportar el `StandardScaler` y los pesos del modelo (`model.save()`) para integrarlos en un servicio de inferencia.
