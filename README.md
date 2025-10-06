@@ -35,13 +35,16 @@ pip install -r requirements.txt
 
 2. **Ejecutar el pipeline**
    - **Opción cuaderno:** ejecuta `jupyter notebook` o `jupyter lab`, abre `Red_Huachicoleo.ipynb` y corre las celdas en orden.
+codex/review-hydrocarbon-theft-analysis-code-x3whc0
    - **Opción script reproducible:** ejecuta `python run_pipeline.py --output artefactos/resultados.json --report artefactos/resumen.md --advanced-models` para entrenar el modelo, evaluar detectores complementarios y generar un reporte JSON + Markdown con las métricas, el umbral calibrado y los errores de reconstrucción del conjunto de prueba.
+
 
 3. **Comprender el pipeline**
    - **Carga y ordenamiento de datos**: el dataset se ordena cronológicamente para preservar dependencias temporales.
    - **Generación de ventanas**: se crean secuencias de 30 minutos con un paso de 5 minutos. Cada ventana hereda la etiqueta positiva si contiene al menos una muestra anómala.
    - **División temporal**: se separan los datos en conjuntos de entrenamiento (60%), validación (20%) y prueba (20%) sin mezclar periodos.
    - **Escalamiento sin fuga de información**: el `StandardScaler` se ajusta exclusivamente con observaciones normales del segmento de entrenamiento y se aplica al resto de los datos.
+codex/review-hydrocarbon-theft-analysis-code-x3whc0
    - **Entrenamiento del autoencoder**: el modelo LSTM configurable se entrena solo con ventanas normales y utiliza `EarlyStopping` para evitar sobreajuste.
    - **Calibración del umbral**: se calculan los errores de reconstrucción en validación, se experimenta con percentiles, MAD e IQR y se selecciona automáticamente el percentil que maximiza el `F1-score`, equilibrando precisión y recall.
    - **Evaluación final**: en el conjunto de prueba se reportan métricas completas (`precision`, `recall`, `f1`, `ROC AUC`, `Average Precision`) y se generan visualizaciones de errores y matrices de confusión.
@@ -72,11 +75,13 @@ Las acciones sugeridas en el resumen pueden llevarse a cabo de la siguiente form
 3. **Registrar ejecuciones**: versiona el JSON y los gráficos en un repositorio o herramienta de experiment tracking (MLflow, Weights & Biases) para comparar iteraciones.
 4. **Conectar con métricas de negocio**: complementa las métricas de clasificación con indicadores operativos (volumen recuperado, tiempo de respuesta) añadidos manualmente en tus reportes ejecutivos.
 
+
 4. **Interpretar resultados**
    - Revisa la tabla de métricas y la matriz de confusión (en el cuaderno) o el archivo JSON generado por `run_pipeline.py` para entender el desempeño del detector.
    - Observa las curvas de entrenamiento, densidades de error y trazas temporales para validar la separación entre comportamientos normales y anómalos.
    - Ajusta los hiperparámetros (tamaño de ventana, percentiles, arquitectura) si necesitas priorizar métricas específicas del negocio. En el script se pueden parametrizar con flags (`--window`, `--step`, `--epochs`, etc.).
 
+codex/review-hydrocarbon-theft-analysis-code-x3whc0
 ### 4. Optimización de ventana, paso, arquitectura y entrenamiento
 
 El script permite experimentar con configuraciones clave sin editar código:
@@ -103,6 +108,7 @@ Para comparar el autoencoder con métodos no secuenciales:
 - Programa ejecuciones periódicas con `--report` y `--output` para generar historiales comparables y alimentar tableros de BI.
 - Exporta el `StandardScaler` y los pesos del autoencoder (`model.save()`) para integrar el flujo en servicios de inferencia en tiempo real.
 - Considera automatizar la corrida con orquestadores (Prefect, Airflow) y añadir validación `walk-forward` más variables contextuales (válvulas, mantenimiento, clima) para robustecer la generalización.
+
 
 ## Presentación profesional de hallazgos
 
